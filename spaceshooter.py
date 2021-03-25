@@ -3,11 +3,32 @@ import pygame
 import os
 import time
 import random
+from pygame import mixer
 pygame.font.init()
 
 WIDTH, HEIGHT = 750, 750
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Shooter")
+
+# Load sounds
+pygame.mixer.pre_init(44100, -16, 2, 512)
+mixer.init()
+
+explosion_fx = pygame.mixer.Sound("assets/explosion.wav")
+explosion_fx.set_volume(.05)
+
+laser_fx = pygame.mixer.Sound("assets/laser.mp3")
+laser_fx.set_volume(.05)
+
+background_fx = pygame.mixer.Sound("assets/background.mp3")
+background_fx.set_volume(.05)
+
+opening_fx = pygame.mixer.Sound("assets/opening.mp3")
+opening_fx.set_volume(.05)
+
+next_level_fx = pygame.mixer.Sound("assets/next_level.mp3")
+next_level_fx.set_volume(.05)
+
 
 # Load images
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
@@ -72,6 +93,7 @@ class Ship: # give attributes to objects
             elif laser.collision(obj):
                 obj.health -= 10 # damage
                 self.lasers.remove(laser)
+                explosion_fx.play() # player getting hit
 
 
     def cooldown(self): # not shooting too fast
@@ -112,6 +134,7 @@ class Player(Ship):
                         objs.remove(obj)
                         if laser in self.lasers:
                             self.lasers.remove(laser)
+                            explosion_fx.play() # enemy getting hit by laser
     
     def draw(self, window):
         super().draw(window)
@@ -133,6 +156,7 @@ class Enemy(Ship):
         self.ship_img, self.laser_img = self.COLOR_MAP[color]
         self.mask = pygame.mask.from_surface(self.ship_img)
 
+
     def move(self, vel):
         self.y += vel
 
@@ -143,11 +167,12 @@ class Enemy(Ship):
             self.cool_down_counter = 1 
 
 
+
 def collide(obj1, obj2): # Overlapping
     offset_x = obj2.x - obj1.x
     offset_y = obj2.y - obj1.y
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
-
+    
 def main():
     run = True
     FPS = 60 
@@ -207,6 +232,7 @@ def main():
         if len(enemies) == 0: # when enemies of the screen
             level += 1
             wave_length += 5 # add more enemies 
+            next_level_fx.play() # complete next stage
             for i in range(wave_length):
                 enemy = Enemy(random.randrange(50, WIDTH-50), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
                 enemies.append(enemy)
@@ -226,6 +252,7 @@ def main():
             player.y += player_vel 
         if keys[pygame.K_SPACE]:
             player.shoot()
+            laser_fx.play() # player shoot laser
 
         for enemy in enemies[:]: # copy
             enemy.move(enemy_vel)
@@ -237,14 +264,17 @@ def main():
             if collide(enemy, player):
                 player.health -= 10
                 enemies.remove(enemy)
+                explosion_fx.play() # player collide with enemy
             elif enemy.y + enemy.get_height() > HEIGHT:
                 lives -= 1
                 enemies.remove(enemy)
+                
 
         player.move_lasers(-laser_vel, enemies)
 
 def main_menu():
     title_font = pygame.font.SysFont("comicsans", 70)
+    opening_fx.play() # opening 
     run = True
     while run:
         WIN.blit(BG, (0,0))
@@ -256,6 +286,7 @@ def main_menu():
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 main()
+
     pygame.quit()
 
 
