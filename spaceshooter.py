@@ -15,19 +15,19 @@ pygame.mixer.pre_init(44100, -16, 2, 512)
 mixer.init()
 
 explosion_fx = pygame.mixer.Sound("assets/explosion.wav")
-explosion_fx.set_volume(.05)
+explosion_fx.set_volume(.1)
 
 laser_fx = pygame.mixer.Sound("assets/laser.mp3")
-laser_fx.set_volume(.05)
+laser_fx.set_volume(.1)
 
 background_fx = pygame.mixer.Sound("assets/background.mp3")
-background_fx.set_volume(.05)
+background_fx.set_volume(.1)
 
 opening_fx = pygame.mixer.Sound("assets/opening.mp3")
-opening_fx.set_volume(.05)
+opening_fx.set_volume(.1)
 
 next_level_fx = pygame.mixer.Sound("assets/next_level.mp3")
-next_level_fx.set_volume(.05)
+next_level_fx.set_volume(.1)
 
 
 # Load images
@@ -284,7 +284,7 @@ def main_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:a
                 main()
 
     pygame.quit()
