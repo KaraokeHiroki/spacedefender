@@ -29,6 +29,8 @@ opening_fx.set_volume(.1)
 next_level_fx = pygame.mixer.Sound("assets/next_level.mp3")
 next_level_fx.set_volume(.1)
 
+game_over_fx = pygame.mixer.Sound("assets/game_over.wav")
+game_over_fx.set_volume(.1)
 
 # Load images
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
@@ -162,7 +164,7 @@ class Enemy(Ship):
 
     def shoot(self):
         if self.cool_down_counter == 0:
-            laser = Laser(self.x-20, self.y, self.laser_img)
+            laser = Laser(self.x-15, self.y, self.laser_img)
             self.lasers.append(laser)
             self.cool_down_counter = 1 
 
@@ -188,7 +190,7 @@ def main():
     player_vel = 5 # how fast to move in every direction (pixels)
     laser_vel = 5 # laser speed
 
-    player= Player(300, 630)
+    player= Player(330, 630)
 
     clock = pygame.time.Clock()
 
@@ -224,7 +226,8 @@ def main():
             lost_count += 1
 
         if lost: # when lost goes to 3 sec timer and quits the game
-            if lost_count > FPS * 3:
+            game_over_fx.play() 
+            if lost_count > FPS * 2: 
                 run = False
             else: 
                 continue
@@ -234,7 +237,7 @@ def main():
             wave_length += 5 # add more enemies 
             next_level_fx.play() # complete next stage
             for i in range(wave_length):
-                enemy = Enemy(random.randrange(50, WIDTH-50), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
+                enemy = Enemy(random.randrange(100, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
                 enemies.append(enemy)
         
         for event in pygame.event.get():
@@ -248,7 +251,7 @@ def main():
             player.x += player_vel
         if keys[pygame.K_w] and player.y - player_vel > 0: # up
             player.y -= player_vel # moving up because staring position is top left
-        if keys[pygame.K_s] and player.y + player_vel + player.get_height() + 15 < HEIGHT: # down
+        if keys[pygame.K_s] and player.y + player_vel + player.get_height() + 20 < HEIGHT: # down
             player.y += player_vel 
         if keys[pygame.K_SPACE]:
             player.shoot()
@@ -284,8 +287,9 @@ def main_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            if event.type == pygame.MOUSEBUTTONDOWN:a
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 main()
+    
 
     pygame.quit()
 
