@@ -39,6 +39,9 @@ loss_life_fx.set_volume(.1)
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red.png"))
 GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green.png"))
 BLUE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_blue.png"))
+PURPLE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_purple.png"))
+ORANGE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_orange.png"))
+
 
 # Player player
 YELLOW_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_main.png"))
@@ -47,6 +50,8 @@ YELLOW_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_main.pn
 RED_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_red.png"))
 GREEN_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_green.png"))
 BLUE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_blue.png"))
+PURPLE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_purple.png"))
+ORANGE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_orange.png"))
 YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_main.png"))
 
 # Background
@@ -153,7 +158,9 @@ class Enemy(Ship):
     COLOR_MAP = {
                 "red": (RED_SPACE_SHIP, RED_LASER),
                 "green": (GREEN_SPACE_SHIP, GREEN_LASER),
-                "blue": (BLUE_SPACE_SHIP, BLUE_LASER)
+                "blue": (BLUE_SPACE_SHIP, BLUE_LASER),
+                "purple": (PURPLE_SPACE_SHIP, PURPLE_LASER),
+                "orange": (ORANGE_SPACE_SHIP, ORANGE_LASER)
                 } # assigning color based on ship color
 
     def __init__(self, x, y, color, health=100): 
@@ -240,7 +247,8 @@ def main():
             wave_length += 5 # add more enemies 
             next_level_fx.play() # complete next stage
             for i in range(wave_length):
-                enemy = Enemy(random.randrange(100, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
+                enemy = Enemy(random.randrange(100, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green", 
+                "purple", "orange"]))
                 enemies.append(enemy)
         
         for event in pygame.event.get():
