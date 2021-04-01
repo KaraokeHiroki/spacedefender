@@ -6,7 +6,7 @@ import random
 from pygame import mixer
 pygame.font.init()
 
-WIDTH, HEIGHT = 750, 750
+WIDTH, HEIGHT = 850, 750
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Shooter")
 
@@ -33,18 +33,18 @@ game_over_fx = pygame.mixer.Sound("assets/game_over.wav")
 game_over_fx.set_volume(.1)
 
 # Load images
-RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
-GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green_small.png"))
-BLUE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_blue_small.png"))
+RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red.png"))
+GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green.png"))
+BLUE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_blue.png"))
 
 # Player player
-YELLOW_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_yellow.png"))
+YELLOW_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_main.png"))
 
 # Lasers
 RED_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_red.png"))
 GREEN_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_green.png"))
 BLUE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_blue.png"))
-YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"))
+YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_main.png"))
 
 # Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
@@ -164,7 +164,7 @@ class Enemy(Ship):
 
     def shoot(self):
         if self.cool_down_counter == 0:
-            laser = Laser(self.x-15, self.y, self.laser_img)
+            laser = Laser(self.x, self.y, self.laser_img)
             self.lasers.append(laser)
             self.cool_down_counter = 1 
 
