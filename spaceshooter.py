@@ -32,6 +32,9 @@ next_level_fx.set_volume(.1)
 game_over_fx = pygame.mixer.Sound("assets/game_over.wav")
 game_over_fx.set_volume(.1)
 
+loss_life_fx = pygame.mixer.Sound("assets/loss_life.wav")
+loss_life_fx.set_volume(.1)
+
 # Load images
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red.png"))
 GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green.png"))
@@ -271,6 +274,7 @@ def main():
             elif enemy.y + enemy.get_height() > HEIGHT:
                 lives -= 1
                 enemies.remove(enemy)
+                loss_life_fx.play() # loss life from enemy passing
                 
 
         player.move_lasers(-laser_vel, enemies)
