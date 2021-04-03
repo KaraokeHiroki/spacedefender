@@ -8,7 +8,7 @@ pygame.font.init()
 
 WIDTH, HEIGHT = 850, 750
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Space Shooter")
+pygame.display.set_caption("Space Defender")
 
 # Load sounds
 pygame.mixer.pre_init(44100, -16, 2, 512)
