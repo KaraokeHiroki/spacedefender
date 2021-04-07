@@ -35,12 +35,18 @@ game_over_fx.set_volume(.1)
 loss_life_fx = pygame.mixer.Sound("assets/loss_life.wav")
 loss_life_fx.set_volume(.1)
 
+healing_health_fx = pygame.mixer.Sound("assets/healing_health.wav")
+healing_health_fx.set_volume(.1)
+
 # Load images
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red.png"))
 GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green.png"))
 BLUE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_blue.png"))
 PURPLE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_purple.png"))
 ORANGE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_orange.png"))
+
+HEALING_RED = pygame.image.load(os.path.join("assets", "pixel_healing_red.png"))
+HEALING_BUFF = pygame.image.load(os.path.join("assets", "pixel_healing_buff.png"))
 
 
 # Player player
@@ -75,7 +81,6 @@ class Laser:
 
     def collision(self, obj):
         return collide(self, obj)
-
 
 
 class Ship: # give attributes to objects
@@ -168,7 +173,6 @@ class Enemy(Ship):
         self.ship_img, self.laser_img = self.COLOR_MAP[color]
         self.mask = pygame.mask.from_surface(self.ship_img)
 
-
     def move(self, vel):
         self.y += vel
 
@@ -178,6 +182,34 @@ class Enemy(Ship):
             self.lasers.append(laser)
             self.cool_down_counter = 1 
 
+class Healing:
+    def __init__(self, x, y, health=100):
+        self.x = x
+        self.y = y
+        self.health = health
+        self.healing_img = HEALING_RED
+        self.mask = pygame.mask.from_surface(self.healing_img)
+
+    def draw(self, window): # draw healing
+        window.blit(self.healing_img, (self.x, self.y))
+
+    def move(self, vel):
+        self.y += vel
+
+    def get_width(self):
+        return self.healing_img.get_width()
+    def get_height(self):
+        return self.healing_img.get_height()
+
+class Buff(Healing):
+    def __init__(self, x, y, health=100):
+        self.healing_img = HEALING_BUFF
+        self.mask = pygame.mask.from_surface(self.healing_img)
+
+    def move(self, vel):
+        self.y += vel
+
+    
 
 
 def collide(obj1, obj2): # Overlapping
@@ -194,11 +226,13 @@ def main():
     lost_font = pygame.font.SysFont("comicsans", 60)
 
     enemies = []
-    wave_length = 5
+    healings = []
+    wave_length_enemy = 5
+    wave_length_healing = 1
     enemy_vel = 1
-
     player_vel = 5 # how fast to move in every direction (pixels)
     laser_vel = 5 # laser speed
+    healing_vel = 1
 
     player= Player(330, 630)
 
@@ -218,7 +252,10 @@ def main():
 
         for enemy in enemies:
             enemy.draw(WIN)
-
+        
+        for healing in healings:
+            healing.draw(WIN)
+    
         player.draw(WIN)
 
         if lost: 
@@ -244,13 +281,20 @@ def main():
 
         if len(enemies) == 0: # when enemies of the screen
             level += 1
-            wave_length += 5 # add more enemies 
+            wave_length_enemy += 5 # add more enemies 
             next_level_fx.play() # complete next stage
-            for i in range(wave_length):
+            for i in range(wave_length_enemy):
                 enemy = Enemy(random.randrange(100, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green", 
                 "purple", "orange"]))
                 enemies.append(enemy)
-        
+            
+        if len(healings) == 0: # when healing of the screen
+            wave_length_healing += 1 # add more healing
+            for i in range(wave_length_healing):
+                healing = Healing(random.randrange(100, WIDTH-100), random.randrange(-1500,-100), random.choice(["HEALING_RED"]))
+                healings.append(healing)
+    
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
@@ -283,8 +327,19 @@ def main():
                 lives -= 1
                 enemies.remove(enemy)
                 loss_life_fx.play() # loss life from enemy passing
-                
 
+        for healing in healings[:]:
+            healing.move(healing_vel)
+
+            if collide(healing, player):
+                player.health += 5
+                healings.remove(healing)
+                healing_health_fx.play() # player collide with healing
+                
+            elif healing.y + healing.get_height() > HEIGHT:
+                healings.remove(healing)
+    
+                
         player.move_lasers(-laser_vel, enemies)
 
 def main_menu():
