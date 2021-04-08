@@ -38,6 +38,9 @@ loss_life_fx.set_volume(.1)
 healing_health_fx = pygame.mixer.Sound("assets/healing_health.wav")
 healing_health_fx.set_volume(.1)
 
+buff_triple_fx = pygame.mixer.Sound("assets/buff_triple.wav")
+buff_triple_fx.set_volume(.1)
+
 # Load images
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red.png"))
 GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green.png"))
@@ -46,7 +49,7 @@ PURPLE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_purple.
 ORANGE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_orange.png"))
 
 HEALING_RED = pygame.image.load(os.path.join("assets", "pixel_healing_red.png"))
-HEALING_BUFF = pygame.image.load(os.path.join("assets", "pixel_healing_buff.png"))
+BUFF_TRIPLE = pygame.image.load(os.path.join("assets", "pixel_buff_triple.png"))
 
 
 # Player player
@@ -59,6 +62,7 @@ BLUE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_blue.png"))
 PURPLE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_purple.png"))
 ORANGE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_orange.png"))
 YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_main.png"))
+YELLOW_LASER_TRIPLE = pygame.image.load(os.path.join("assets", "pixel_laser_main_triple.png"))
 
 # Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
@@ -201,15 +205,24 @@ class Healing:
     def get_height(self):
         return self.healing_img.get_height()
 
-class Buff(Healing):
+class Buff:
     def __init__(self, x, y, health=100):
-        self.healing_img = HEALING_BUFF
-        self.mask = pygame.mask.from_surface(self.healing_img)
+        self.x = x
+        self.y = y
+        self.health = health
+        self.buff_img = BUFF_TRIPLE
+        self.mask = pygame.mask.from_surface(self.buff_img)
+    
+    def draw(self, window):
+        window.blit(self.buff_img, (self.x, self.y))
 
     def move(self, vel):
         self.y += vel
-
     
+    def get_width(self):
+        return self.buff_img.get_width()
+    def get_height(self):
+        return self.buff_img.get_height()
 
 
 def collide(obj1, obj2): # Overlapping
@@ -227,12 +240,16 @@ def main():
 
     enemies = []
     healings = []
+    buffs = []
     wave_length_enemy = 5
     wave_length_healing = 1
+    wave_length_buff = 0
     enemy_vel = 1
     player_vel = 5 # how fast to move in every direction (pixels)
-    laser_vel = 5 # laser speed
+    enemy_laser_vel = 5 # laser speed
+    player_laser_vel = 7
     healing_vel = 1
+    buff_vel = 1
 
     player= Player(330, 630)
 
@@ -240,6 +257,7 @@ def main():
 
     lost = False
     lost_count = 0
+
 
     def redraw_window():
         WIN.blit(BG, (0,0))
@@ -255,6 +273,9 @@ def main():
         
         for healing in healings:
             healing.draw(WIN)
+
+        for buff in buffs:
+            buff.draw(WIN)
     
         player.draw(WIN)
 
@@ -293,6 +314,12 @@ def main():
             for i in range(wave_length_healing):
                 healing = Healing(random.randrange(100, WIDTH-100), random.randrange(-1500,-100), random.choice(["HEALING_RED"]))
                 healings.append(healing)
+
+        if len(buffs) == 0: 
+            wave_length_buff 
+            for i in range(wave_length_buff):
+                buff = Buff(random.randrange(100, WIDTH-100), random.randrange(-1500,-100), random.choice(["BUFF_TRIPLE"]))
+                buffs.append(buff)
     
 
         for event in pygame.event.get():
@@ -314,7 +341,7 @@ def main():
 
         for enemy in enemies[:]: # copy
             enemy.move(enemy_vel)
-            enemy.move_lasers(laser_vel, player)
+            enemy.move_lasers(enemy_laser_vel, player)
             
             if random.randrange(0, 2*60) == 1: # probability of enemy shooting
                 enemy.shoot()
@@ -338,9 +365,17 @@ def main():
                 
             elif healing.y + healing.get_height() > HEIGHT:
                 healings.remove(healing)
-    
-                
-        player.move_lasers(-laser_vel, enemies)
+        
+        for buff in buffs[:]:
+            buff.move(buff_vel)
+
+            if collide(buff, player):
+                player.laser_img = YELLOW_LASER_TRIPLE 
+                buffs.remove(buff)
+                buff_triple_fx.play()
+
+
+        player.move_lasers(-player_laser_vel, enemies)
 
 def main_menu():
     title_font = pygame.font.SysFont("comicsans", 70)
