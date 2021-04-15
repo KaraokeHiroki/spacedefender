@@ -243,7 +243,7 @@ def main():
     buffs = []
     wave_length_enemy = 5
     wave_length_healing = 1
-    wave_length_buff = 0
+    wave_length_buff = 1
     enemy_vel = 1
     player_vel = 5 # how fast to move in every direction (pixels)
     enemy_laser_vel = 5 # laser speed
@@ -360,6 +360,8 @@ def main():
 
             if collide(healing, player):
                 player.health += 5
+                if player.health >= 100: # health cap
+                    player.health = 100
                 healings.remove(healing)
                 healing_health_fx.play() # player collide with healing
                 
@@ -370,7 +372,7 @@ def main():
             buff.move(buff_vel)
 
             if collide(buff, player):
-                player.laser_img = YELLOW_LASER_TRIPLE 
+                player.laser_img = YELLOW_LASER_TRIPLE
                 buffs.remove(buff)
                 buff_triple_fx.play()
 
