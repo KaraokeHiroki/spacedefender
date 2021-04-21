@@ -206,6 +206,7 @@ class Healing:
         return self.healing_img.get_height()
 
 class Buff:
+    COOLDOWN = 30
     def __init__(self, x, y, health=100):
         self.x = x
         self.y = y
@@ -302,7 +303,7 @@ def main():
 
         if len(enemies) == 0: # when enemies of the screen
             level += 1
-            wave_length_enemy += 5 # add more enemies 
+            wave_length_enemy += 2 # add more enemies 
             next_level_fx.play() # complete next stage
             for i in range(wave_length_enemy):
                 enemy = Enemy(random.randrange(100, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green", 
