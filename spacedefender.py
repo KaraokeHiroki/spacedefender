@@ -249,7 +249,7 @@ def main():
     enemy_laser_vel = 5 # laser speed
     player_laser_vel = 7
     healing_vel = 1
-    buff_vel = 1
+    buff_vel = 0
 
     player= Player(330, 630)
 
