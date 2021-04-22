@@ -11,7 +11,7 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Defender")
 
 # Load sounds
-pygame.mixer.pre_init()
+pygame.mixer.pre_init(44100, -16, 2, 512) # default (frequency, size, channel, buffer)
 mixer.init()
 
 explosion_fx = pygame.mixer.Sound("assets/explosion.wav")
@@ -348,7 +348,7 @@ def main():
             
             if random.randrange(0, 2*60) == 1: # probability of enemy shooting
                 enemy.shoot()
-
+            
             if collide(enemy, player):
                 player.health -= 10
                 enemies.remove(enemy)
