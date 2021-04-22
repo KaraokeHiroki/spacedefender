@@ -41,7 +41,7 @@ healing_health_fx.set_volume(.1)
 buff_triple_fx = pygame.mixer.Sound("assets/buff_triple.wav")
 buff_triple_fx.set_volume(.1)
 
-# Used Pixel Art 8 by 8
+# PixilArt 8 by 8 https://www.pixilart.com/draw
 
 # Load images 
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red.png"))
