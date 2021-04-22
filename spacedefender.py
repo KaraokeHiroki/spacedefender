@@ -11,7 +11,7 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Defender")
 
 # Load sounds
-pygame.mixer.pre_init(44100, -16, 2, 512)
+pygame.mixer.pre_init()
 mixer.init()
 
 explosion_fx = pygame.mixer.Sound("assets/explosion.wav")
@@ -41,7 +41,9 @@ healing_health_fx.set_volume(.1)
 buff_triple_fx = pygame.mixer.Sound("assets/buff_triple.wav")
 buff_triple_fx.set_volume(.1)
 
-# Load images
+# Used Pixel Art 8 by 8
+
+# Load images 
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red.png"))
 GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green.png"))
 BLUE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_blue.png"))
