@@ -67,7 +67,7 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_main.png"))
 YELLOW_LASER_TRIPLE = pygame.image.load(os.path.join("assets", "pixel_laser_main_triple.png"))
 
 # Background
-BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
+BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "pixel_background.png")), (WIDTH, HEIGHT))
 
 class Laser:
     def __init__(self, x, y, img):
@@ -208,14 +208,13 @@ class Healing:
         return self.healing_img.get_height()
 
 class Buff:
-    COOLDOWN = 30
     def __init__(self, x, y, health=100):
         self.x = x
         self.y = y
         self.health = health
         self.buff_img = BUFF_TRIPLE
         self.mask = pygame.mask.from_surface(self.buff_img)
-    
+
     def draw(self, window):
         window.blit(self.buff_img, (self.x, self.y))
 
@@ -252,7 +251,7 @@ def main():
     enemy_laser_vel = 5 # laser speed
     player_laser_vel = 7
     healing_vel = 1
-    buff_vel = 0
+    buff_vel = 1
 
     player= Player(330, 630)
 
@@ -319,8 +318,9 @@ def main():
                 healings.append(healing)
 
         if len(buffs) == 0: 
-            wave_length_buff 
-            for i in range(wave_length_buff):
+            if level > 0:
+                wave_length_buff = 1
+            for i in range(wave_length_buff): 
                 buff = Buff(random.randrange(100, WIDTH-100), random.randrange(-1500,-100), random.choice(["BUFF_TRIPLE"]))
                 buffs.append(buff)
     
@@ -375,10 +375,12 @@ def main():
             buff.move(buff_vel)
 
             if collide(buff, player):
-                player.laser_img = YELLOW_LASER_TRIPLE
+                if player.health >= 100:
+                    player.laser_img = YELLOW_LASER_TRIPLE
                 buffs.remove(buff)
                 buff_triple_fx.play()
-
+            if player.health < 100:
+                player.laser_img = YELLOW_LASER         
 
         player.move_lasers(-player_laser_vel, enemies)
 
