@@ -237,8 +237,8 @@ def main():
     FPS = 60 
     level = 0
     lives = 5
-    main_font = pygame.font.SysFont("comicsans", 50)
-    lost_font = pygame.font.SysFont("comicsans", 60)
+    main_font = pygame.font.SysFont("Impact", 40)
+    lost_font = pygame.font.SysFont("Impact", 60)
 
     enemies = []
     healings = []
@@ -385,7 +385,7 @@ def main():
         player.move_lasers(-player_laser_vel, enemies)
 
 def main_menu():
-    title_font = pygame.font.SysFont("comicsans", 70)
+    title_font = pygame.font.SysFont("Impact", 60)
     opening_fx.play() # opening 
     run = True
     while run:
