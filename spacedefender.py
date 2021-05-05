@@ -1,4 +1,5 @@
 # pygame tutorial https://www.youtube.com/watch?v=Q-__8Xw9KTM&t=254s
+
 import pygame
 import os
 import time
@@ -325,11 +326,9 @@ def main():
                 buff = Buff(random.randrange(100, WIDTH-100), random.randrange(-1500,-100), random.choice(["BUFF_TRIPLE"]))
                 buffs.append(buff)
     
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                exit()
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a] and player.x - player_vel > 0: # left
@@ -400,8 +399,7 @@ def main_menu():
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 main()
-    
-
+   
     pygame.quit()
 
 
